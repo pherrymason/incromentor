@@ -108,6 +108,9 @@
 				$this.bind( 'incromentor.stepup', _step_up );
 				$this.bind( 'incromentor.stepdown', _step_down );
 
+				$this.bind('incromentor.onstepup', function(){ data.onStepUp(); } );
+				$this.bind('incromentor.onstepdown', function(){ data.onStepDown(); } );
+
 				data = $.extend( data, options );
 
 				$this.data('incromentor', data );
@@ -154,11 +157,11 @@
 		if( $.isFunction( data.stepUp ) && current_val<data.max )
 		{
 			value = data.stepUp( current_val );
-			$this.trigger('incromentor.onstepup', null );
 
 			$this.val( value );
 			data.previous = parseInt( $this.val(), 10 );
 			$this.data('increment', data );
+			$this.trigger('incromentor.onstepup' );
 		}
 
 		_buttons_state( $this.val(), data );
@@ -176,11 +179,11 @@
 		if( $.isFunction( data.stepDown ) && current_val>data.min )
 		{
 			value = data.stepDown( $this.val() );
-			$this.trigger('incromentor.onstepdown', null );
 
 			$this.val( value );
 			data.previous = parseInt( $this.val(), 10 );
 			$this.data('increment', data );
+			$this.trigger('incromentor.onstepdown' );
 		}
 
 		_buttons_state( $this.val(), data );
