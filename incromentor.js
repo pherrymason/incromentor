@@ -61,7 +61,7 @@
 				data.toolset.up		= $('<button type="button">'+data.more_text+'</button>' ).attr({"class":"btn"});
 				data.toolset.down	= $('<button type="button">'+data.less_text+'</button>' ).attr({"class":"btn"});
 
-				if( Modernizr.inputtypes.number )
+				if( Modernizr.inputtypes.number && $this.attr('type')==='number' )
 				{
 					$this.bind('change', function(e){
 						
