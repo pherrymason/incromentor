@@ -4,6 +4,186 @@
 */
 (function( $ ) {
 
+
+	var Incromentor = function( $elm, options ){
+
+		this.$element	= $elm;
+		this.options	= $.extend( {}, $.fn.incromentor.defaults, options );
+		this.previous	= null;
+		
+		this.init();
+	};
+
+
+	Incromentor.prototype = {
+
+		init : function(){
+
+			// Check if max attr is defined
+			var t = this.$element.attr('max');
+			if( t===undefined && this.options.max )
+			{
+				this.$element.attr('max', this.options.max );
+			}
+			else
+				this.options.max = this.$element.attr('max');
+
+
+			t = this.$element.attr('min');
+			if( t===undefined && this.options.min )
+			{
+				this.$element.attr('min', this.options.min );
+			}
+			else
+				this.options.min = this.$element.attr('min');
+
+			t = this.$element.attr('step');
+			if( t===undefined && this.options.step )
+			{
+				this.$element.attr('step', this.options.step );
+			}
+			else
+				this.options.step = this.$element.attr('step');
+
+
+			var $wrapper = $('<span class="incromentor-wr"/>');
+			
+
+			this.$btn_up 	= $( '<a href="#up" class="incromentor-up">' + this.options.more_text + '</a>' );
+			this.$btn_down	= $( '<a href="#down" class="incromentor-down">' + this.options.less_text + '</a>' );
+
+			this.$element.wrap( $wrapper );
+			
+
+			
+			if( Modernizr.inputtypes.number && $this.attr('type')==='number' )
+			{
+				var that = this;
+				this.$element.bind('change', function(event){
+					
+					var current	= parseInt( that.$element.val(), 10 );
+
+					if( that.previous > current )
+					{
+						//Value decremented
+						that.$element.val( that.previous );
+						that.$element.trigger( 'incromentor.stepdown' );
+					}
+					else if( that.previous < current )
+					{
+						//Value incremented
+						that.$element.val( data.previous );
+						that.$element.trigger( 'incromentor.stepup' );
+					}
+
+					event.preventDefault();
+				});
+			}
+			else
+			{
+				$wrapper = this.$element.parent();
+				$wrapper.append( this.$btn_up ).append( this.$btn_down );
+
+				var that = this;
+				this.$btn_up.click( function(){
+					that.$element.trigger('incromentor.stepup');
+				});
+				this.$btn_down.click( function(){
+					that.$element.trigger('incromentor.stepdown');
+				});
+				this.$element.bind( 'keydown', $.proxy( this._keyboard_handle, this ) );
+			}
+
+			this.$element.bind('incromentor.stepup', $.proxy( this._step_up, this ) );
+			this.$element.bind('incromentor.stepdown', $.proxy( this._step_down, this ) );
+
+			this.$element.bind( 'incromentor.onstepup', $.proxy( this.options['onStepUp'], this ) );
+			this.$element.bind( 'incromentor.onstepdown', $.proxy( this.options['onStepDown'], this ) );
+		},
+
+		_keyboard_handle : function( event )
+		{
+			var $this = $(event.target);
+			// ↑ ↓ keys
+			if( event.keyCode===38 )
+			{
+				this.$element.trigger( 'incromentor.stepup' );
+			}
+
+			if( event.keyCode===40 )
+			{
+				this.$element.trigger( 'incromentor.stepdown' );
+			}
+
+			if( this.options.keyboard_input===false )
+			{
+				event.preventDefault();
+			}
+		},
+
+		_buttons_state : function( value )
+		{
+			this.$btn_up.attr('disabled', (value==this.options.max) );
+			this.$btn_down.attr('disabled', (value==this.options.min) );
+		},
+
+		_step_up : function(event){
+
+			var current_val	= parseInt( this.$element.val(), 10 );
+
+			if( current_val<this.options.max )
+			{
+				if( $.isFunction( this.options.stepUp ) )
+				{
+					current_val = this.options.stepUp( current_val );
+				}
+				else
+					current_val += this.options.step;
+
+				this.$element.val( current_val );
+				this.previous = current_val;
+				this.$element.trigger('incromentor.onstepup' );
+			}
+
+			this._buttons_state( current_val );
+		},
+
+		_step_down : function(event){
+
+			var current_val	= parseInt( this.$element.val(), 10 );
+
+			if( current_val>this.options.min )
+			{
+				if( $.isFunction( this.options.stepDown ) )
+				{
+					current_val = this.options.stepDown( current_val );
+				}
+				else
+					current_val -= this.options.step;
+
+				this.$element.val( current_val );
+				this.previous = current_val;
+				this.$element.trigger('incromentor.onstepdown' );
+			}
+
+			this._buttons_state( current_val );
+		},
+
+		onStepUp : function(event){
+
+		},
+
+		onStepDown : function(event){
+
+		}
+
+	};
+
+
+
+
+
+
 	$.fn.incromentor = function( options ){
 		
 		return this.each( function(){
@@ -13,197 +193,26 @@
 			
 			if( !data )
 			{
-				//Init item
-				data = {
-				//	min			: 0,
-				//	max			: 65535,
-				//	step		: 1,
-					"class"			: 'incromentor',
-					more_text			: '&#9650',
-					less_text		: '&#9660',
-					keyboard_input	: true,
-					stepUp			: _calculate_step_up,		//function that calculates next step
-					stepDown		: _calculate_step_down,		//function that calculates previous step
-					onStepUp 		: function(){},				//function to execute after stepping up
-					onStepDown		: function(){},				//function to execute after stepping down
-					previous		: $this.val()				//Previous value
-				};
-
-				var t = $this.attr('max');
-				if( t===undefined && options.max )
-				{
-					$this.attr('max',options.max);
-				}
-				else
-					data.max = ( t===undefined )? null:t;
-
-				t = $this.attr('min');
-				if( t===undefined && options.min )
-				{
-					$this.attr('min',options.min);
-				}
-				else
-					data.min = (t===undefined)? null:t;
-
-				t = $this.attr('step');
-				if( t===undefined && options.step )
-				{
-					$this.attr('step',options.step );
-				}
-				else
-					data.step = (t===undefined)? 1:t;
-
-				data.min = parseInt( data.min, 10 );
-				data.max = parseInt( data.max, 10 );
-				data.toolset = $('<span/>',{
-										"class":data["class"]
-										});
-				data.toolset.up		= $('<button type="button">'+data.more_text+'</button>' ).attr({"class":"btn"});
-				data.toolset.down	= $('<button type="button">'+data.less_text+'</button>' ).attr({"class":"btn"});
-
-				if( Modernizr.inputtypes.number && $this.attr('type')==='number' )
-				{
-					$this.bind('change', function(e){
-						
-						var $this		= $(e.target),
-							 data		= $this.data('incromentor'),
-							 current	= parseInt( $this.val(), 10 );
-
-						if( data.previous > $this.val() )
-						{
-							//Value decremented
-							$this.val( data.previous );
-							$this.trigger( 'incromentor.stepdown' );
-						}
-						else if( data.previous < $this.val() )
-						{
-							//Value incremented
-							$this.val( data.previous );
-							$this.trigger( 'incromentor.stepup' );
-						}
-
-						e.preventDefault();
-					});
-				}
-				else
-				{
-					data.toolset.append( data.toolset.up );
-					data.toolset.append( data.toolset.down );
-
-					data.toolset.up.click( function(){
-						$this.trigger( 'incromentor.stepup' );
-					});
-
-					data.toolset.down.click( function(){
-						$this.trigger( 'incromentor.stepdown' );
-					});
-
-					$this.wrap( '<span style="position:relative;display:inline-block;"></span>' );
-					$this.after( data.toolset );
-					$this.bind( 'keydown', _keyboard_handle );
-				}
-
-				
-
-				$this.bind( 'incromentor.stepup', _step_up );
-				$this.bind( 'incromentor.stepdown', _step_down );
-
-				$this.bind('incromentor.onstepup', function(){ data.onStepUp(); } );
-				$this.bind('incromentor.onstepdown', function(){ data.onStepDown(); } );
-
-				data = $.extend( data, options );
-
-				$this.data('incromentor', data );
+				data = new Incromentor( $this, options );
+				$this.data( 'incromentor', data );
 			}
 		});
 	}
 
 
-	function _keyboard_handle( e )
-	{
-		var $this = $(e.target);
-		// ↑ ↓ keys
-		if( e.keyCode===38 )
-		{
-			$this.trigger( 'incromentor.stepup' );
-		}
-
-		if( e.keyCode===40 )
-		{
-			$this.trigger( 'incromentor.stepdown' );
-		}
-
-		if( $this.data('incromentor').keyboard_input===false )
-		{
-			e.preventDefault();
-		}
+	$.fn.incromentor.defaults = {
+		"class"			: "incromentor",
+		more_text		: '&#9650',
+		less_text		: '&#9660',
+		step			: 1,
+		max : 65355,
+		min : 0,
+//		step :null,
+		keyboard_input	: true,						// ???
+//		stepUp			: _calculate_step_up,		// function that calculates next step
+//		stepDown		: _calculate_step_down,		// function that calculates previous step
+		onStepUp 		: function(){},				// function to execute after stepping up
+		onStepDown		: function(){},				// function to execute after stepping down
 	}
-
-
-	function _buttons_state( value, data )
-	{
-		data.toolset.up.attr('disabled', ( value == data.max ) );
-		data.toolset.down.attr('disabled', ( value == data.min ) );		
-	}
-
-
-	function _step_up(){
-
-		var $this	= $(this),
-		data		= $this.data('incromentor'),
-		value		= null,
-		current_val	= parseInt( $this.val(), 10 );
-
-		if( $.isFunction( data.stepUp ) && current_val<data.max )
-		{
-			value = data.stepUp( current_val );
-
-			$this.val( value );
-			data.previous = parseInt( $this.val(), 10 );
-			$this.data('increment', data );
-			$this.trigger('incromentor.onstepup' );
-		}
-
-		_buttons_state( $this.val(), data );
-	}
-
-
-
-	function _step_down(){
-
-		var $this	= $(this),
-		data		= $this.data('incromentor'),
-		value		= null,
-		current_val	= parseInt( $this.val(), 10 );
-
-		if( $.isFunction( data.stepDown ) && current_val>data.min )
-		{
-			value = data.stepDown( $this.val() );
-
-			$this.val( value );
-			data.previous = parseInt( $this.val(), 10 );
-			$this.data('increment', data );
-			$this.trigger('incromentor.onstepdown' );
-		}
-
-		_buttons_state( $this.val(), data );
-	}
-
-		
-
-
-		function _calculate_step_up( current_value )
-		{
-			//console.log( 'incrementing '+current_value + '+'+this.step );
-			return current_value + this.step;
-		}
-
-
-		function _calculate_step_down( current_value )
-		{
-			//console.log( 'decrementing '+current_value + '-'+this.step );
-			return current_value - this.step;
-		}
-
 
 })( jQuery );

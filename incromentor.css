@@ -1,0 +1,53 @@
+.incromentor-wr {
+	position:relative;
+	display:inline-block;
+}
+
+.incromentor-wr .incromentor-up,
+.incromentor-wr .incromentor-down
+{
+	width:20px;
+	height:50%;
+	display:block;
+	font-size:8px;
+	text-align:center;
+	color:#555;
+	line-height:1;
+	padding-top: 2px;
+
+	position:absolute;
+	background:#EDEDED;
+	-webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+      -ms-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.incromentor-wr .incromentor-up:hover,
+.incromentor-wr .incromentor-down:hover{
+	text-decoration: none;
+}
+
+.incromentor-wr .incromentor-up:active,
+.incromentor-wr .incromentor-down:active{
+	color:#A0A0A0;
+}
+
+.incromentor-wr .incromentor-up{
+	top:0;
+	right:0;
+	border-color:#CCCCCC #CCCCCC #DDDDDD;
+	border-top:1px solid #CCC;
+	border-left:1px solid #CCC;
+	border-right:1px solid #CCC;
+	border-bottom:1px solid #DDD;
+}
+
+.incromentor-wr .incromentor-down{
+	bottom:0;
+	right:0;
+	border-bottom:1px solid #CCC;
+	border-left:1px solid #CCC;
+	border-right:1px solid #CCC;
+}
+
