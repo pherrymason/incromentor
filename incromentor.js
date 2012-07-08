@@ -54,7 +54,7 @@
 			}
 
 
-			var $wrapper = $('<span class="incromentor-wr"/>');
+			var $wrapper = $('<span class="'+this.options['class']+'"/>');
 			this.$btn_up 	= $( '<a href="#up" class="incromentor-up">' + this.options.more_text + '</a>' );
 			this.$btn_down	= $( '<a href="#down" class="incromentor-down">' + this.options.less_text + '</a>' );
 
@@ -211,7 +211,7 @@
 
 
 	$.fn.incromentor.defaults = {
-		"class"			: "incromentor",
+		"class"			: "incromentor-wr",
 		more_text		: '&#9650',
 		less_text		: '&#9660',
 		step			: 1,

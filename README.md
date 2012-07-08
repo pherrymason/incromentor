@@ -37,23 +37,22 @@ Incromentor supports `max`, `min` and `step` html arguments, although these can 
 	});
 
 Available options:
-
- * `max`:		Sets maximum value input element can contain. Increment control will be disabled after reaching maximum value 
+	* `max`:		Sets maximum value input element can contain. Increment control will be disabled after reaching maximum value 
 					This parameter, if defined will override html max attribute.
 
- * `min`				:	Sets minimum value input element can contain. Decrement control will be disabled after reaching minimum value.
+	* `min`				:	Sets minimum value input element can contain. Decrement control will be disabled after reaching minimum value.
 							This parameter, if defined will override html max attribute.
 
- * `step`			:	Decrement/Increment actions will substract/add 5 units to value. By default 1.
- * `class`			:	Class to be applied to the <span> that wraps buttons. Remember to define this key between double quotes!. 
+	* `step`			:	Decrement/Increment actions will substract/add 5 units to value. By default 1.
+	* `class`			:	Class to be applied to the <span> that wraps buttons. Remember to define this key between double quotes!. 
 							Default value is `incromentor`. `String`. Only used in non-number-browsers!
- * `more_text`		:	String to place inside increment button. Default is `&#9650`. Only used in non-number-browsers!
- * `less_text`		:	String to place inside decrement button. Default is `&#9660`. Only used in non-number-browsers!
- * `keyboard_input`	:	If false, values can only be introduced using UI. `Boolean`, Default `true`.
- * `stepUp`			:	Callback to be called when user wants to increment the value. If not defined, incromentor uses +`step`.
- * `stepDown`		:	Callback to be called when user wants to decrement the value. If not defined, incromentor uses -`step`.
- * `onStepUp`		:	Callback to be called after value has been incremented.
- * `onStepDown`		:	Callback to be called after value has been decremented.
+	* `more_text`		:	String to place inside increment button. Default is `&#9650`. Only used in non-number-browsers!
+	* `less_text`		:	String to place inside decrement button. Default is `&#9660`. Only used in non-number-browsers!
+	* `keyboard_input`	:	If false, values can only be introduced using UI. `Boolean`, Default `true`.
+	* `stepUp`			:	Callback to be called when user wants to increment the value. If not defined, incromentor uses +`step`.
+	* `stepDown`		:	Callback to be called when user wants to decrement the value. If not defined, incromentor uses -`step`.
+	* `onStepUp`		:	Callback to be called after value has been incremented.
+	* `onStepDown`		:	Callback to be called after value has been decremented.
 
 
 You can configure a function for increment/decrement events:
@@ -74,7 +73,7 @@ You can configure a function for increment/decrement events:
 
 Styling
 -------
-Incromentor adds the class `incromentor` to every touched element. You can use included `incromentor.css` or create your own one.
+Incromentor adds the class `incromentor-wr` to every touched element. You can use included `incromentor.css` or create your own one.
 However you can tell incromentor to set a different class name:
 
 	$('#the_input').incromentor({
