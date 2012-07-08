@@ -10,7 +10,6 @@
 		this.$element	= $elm;
 		this.options	= $.extend( {}, $.fn.incromentor.defaults, options );
 		this.previous	= null;
-		
 		this.init();
 	};
 
@@ -19,46 +18,54 @@
 
 		init : function(){
 
+		//	this.options.min = ( typeof(this.options.min)=="undefined" )? 0:this.options.min;
+		//	this.options.max = ( typeof(this.options.max)=="undefined" )? 65355:this.options.max;
+
 			// Check if max attr is defined
-			var t = this.$element.attr('max');
-			if( t===undefined && this.options.max )
+			var attr = this.$element.attr('max');
+			if( !this.options.max && typeof(attr)=='undefined' )
 			{
-				this.$element.attr('max', this.options.max );
+				this.options.max = 65355;
 			}
-			else
-				this.options.max = this.$element.attr('max');
+			else if( typeof(attr)!='undefined' )
+			{
+				this.options.max = parseInt(attr,10);
+			}
+
+			attr = this.$element.attr('min');
+			if( !this.options.min && typeof(attr)=='undefined' )
+			{
+				this.options.min = 0;
+			}
+			else if( typeof(attr)!='undefined' )
+			{
+				this.options.min = parseInt(attr,10);
+			}
 
 
-			t = this.$element.attr('min');
-			if( t===undefined && this.options.min )
+			attr = this.$element.attr('step');
+			if( !this.options.step && typeof(attr)=='undefined' )
 			{
-				this.$element.attr('min', this.options.min );
+				this.options.step = 1;
 			}
-			else
-				this.options.min = this.$element.attr('min');
-
-			t = this.$element.attr('step');
-			if( t===undefined && this.options.step )
+			else if( typeof(attr)!='undefined' )
 			{
-				this.$element.attr('step', this.options.step );
+				this.options.step = parseInt(attr,10);
 			}
-			else
-				this.options.step = this.$element.attr('step');
 
 
 			var $wrapper = $('<span class="incromentor-wr"/>');
-			
-
 			this.$btn_up 	= $( '<a href="#up" class="incromentor-up">' + this.options.more_text + '</a>' );
 			this.$btn_down	= $( '<a href="#down" class="incromentor-down">' + this.options.less_text + '</a>' );
 
+			this.$element.css({'margin':0});
 			this.$element.wrap( $wrapper );
 			
 
 			
-			if( Modernizr.inputtypes.number && $this.attr('type')==='number' )
+			var that = this;
+			if( Modernizr.inputtypes.number && this.$element.attr('type')==='number' )
 			{
-				var that = this;
 				this.$element.bind('change', function(event){
 					
 					var current	= parseInt( that.$element.val(), 10 );
@@ -84,7 +91,6 @@
 				$wrapper = this.$element.parent();
 				$wrapper.append( this.$btn_up ).append( this.$btn_down );
 
-				var that = this;
 				this.$btn_up.click( function(){
 					that.$element.trigger('incromentor.stepup');
 				});
@@ -103,7 +109,6 @@
 
 		_keyboard_handle : function( event )
 		{
-			var $this = $(event.target);
 			// ↑ ↓ keys
 			if( event.keyCode===38 )
 			{
@@ -130,6 +135,7 @@
 		_step_up : function(event){
 
 			var current_val	= parseInt( this.$element.val(), 10 );
+			current_val = isNaN(current_val)? this.options.min:current_val;
 
 			if( current_val<this.options.max )
 			{
@@ -138,7 +144,9 @@
 					current_val = this.options.stepUp( current_val );
 				}
 				else
+				{
 					current_val += this.options.step;
+				}
 
 				this.$element.val( current_val );
 				this.previous = current_val;
@@ -159,7 +167,9 @@
 					current_val = this.options.stepDown( current_val );
 				}
 				else
+				{
 					current_val -= this.options.step;
+				}
 
 				this.$element.val( current_val );
 				this.previous = current_val;
@@ -197,7 +207,7 @@
 				$this.data( 'incromentor', data );
 			}
 		});
-	}
+	};
 
 
 	$.fn.incromentor.defaults = {
@@ -205,14 +215,14 @@
 		more_text		: '&#9650',
 		less_text		: '&#9660',
 		step			: 1,
-		max : 65355,
-		min : 0,
+//		max : 65355,
+//		min : 0,
 //		step :null,
 		keyboard_input	: true,						// ???
 //		stepUp			: _calculate_step_up,		// function that calculates next step
 //		stepDown		: _calculate_step_down,		// function that calculates previous step
 		onStepUp 		: function(){},				// function to execute after stepping up
-		onStepDown		: function(){},				// function to execute after stepping down
-	}
+		onStepDown		: function(){}				// function to execute after stepping down
+	};
 
 })( jQuery );
