@@ -33,6 +33,11 @@
 	color:#A0A0A0;
 }
 
+.incromentor-wr .incromentor-up[disabled=disabled],
+.incromentor-wr .incromentor-down[disabled=disabled]{
+	color:#CCC;
+}
+
 .incromentor-wr .incromentor-up{
 	top:0;
 	right:0;

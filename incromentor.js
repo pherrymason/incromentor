@@ -4,6 +4,7 @@
 */
 (function( $ ) {
 
+	var inputNumberAvailableSupported = checkInputTypeNumber();
 
 	var Incromentor = function( $elm, options ){
 
@@ -13,13 +14,27 @@
 		this.init();
 	};
 
+	// Taken from Modernizr 2.6.2
+	function checkInputTypeNumber(){
+
+		var inputElem = document.createElement('input'),
+		smile = ':)',
+		bool  = false;
+
+		inputElem.setAttribute('type', 'number');
+		bool = inputElem.type !== 'text';
+		if( bool ) {
+			inputElem.value = smile;
+			bool = inputElem.value != smile;
+		}
+
+		return bool;
+	}
+
 
 	Incromentor.prototype = {
 
 		init : function(){
-
-		//	this.options.min = ( typeof(this.options.min)=="undefined" )? 0:this.options.min;
-		//	this.options.max = ( typeof(this.options.max)=="undefined" )? 65355:this.options.max;
 
 			// Check if max attr is defined
 			var attr = this.$element.attr('max');
@@ -55,19 +70,18 @@
 
 
 			var $wrapper = $('<span class="'+this.options['class']+'"/>');
-			this.$btn_up 	= $( '<a href="#up" class="incromentor-up">' + this.options.more_text + '</a>' );
+			this.$btn_up = $( '<a href="#up" class="incromentor-up">' + this.options.more_text + '</a>' );
 			this.$btn_down	= $( '<a href="#down" class="incromentor-down">' + this.options.less_text + '</a>' );
 
 			this.$element.css({'margin':0});
 			this.$element.wrap( $wrapper );
-			
 
-			
+
 			var that = this;
-			if( Modernizr.inputtypes.number && this.$element.attr('type')==='number' )
+			if( inputNumberAvailableSupported && this.$element.attr('type')==='number' )
 			{
 				this.$element.bind('change', function(event){
-					
+
 					var current	= parseInt( that.$element.val(), 10 );
 
 					if( that.previous > current )
@@ -75,12 +89,14 @@
 						//Value decremented
 						that.$element.val( that.previous );
 						that.$element.trigger( 'incromentor.stepdown' );
+						that.$element.trigger( 'incromentor.change' );
 					}
 					else if( that.previous < current )
 					{
 						//Value incremented
-						that.$element.val( data.previous );
+						that.$element.val( that.previous );
 						that.$element.trigger( 'incromentor.stepup' );
+						that.$element.trigger( 'incromentor.change' );
 					}
 
 					event.preventDefault();
@@ -91,11 +107,15 @@
 				$wrapper = this.$element.parent();
 				$wrapper.append( this.$btn_up ).append( this.$btn_down );
 
-				this.$btn_up.click( function(){
+				this.$btn_up.click( function(e){
+					e.preventDefault();
 					that.$element.trigger('incromentor.stepup');
+					that.$element.trigger('incromentor.change');
 				});
-				this.$btn_down.click( function(){
+				this.$btn_down.click( function(e){
+					e.preventDefault();
 					that.$element.trigger('incromentor.stepdown');
+					that.$element.trigger('incromentor.change');
 				});
 				this.$element.bind( 'keydown', $.proxy( this._keyboard_handle, this ) );
 			}
@@ -103,8 +123,10 @@
 			this.$element.bind('incromentor.stepup', $.proxy( this._step_up, this ) );
 			this.$element.bind('incromentor.stepdown', $.proxy( this._step_down, this ) );
 
-			this.$element.bind( 'incromentor.onstepup', $.proxy( this.options['onStepUp'], this ) );
-			this.$element.bind( 'incromentor.onstepdown', $.proxy( this.options['onStepDown'], this ) );
+			this.$element.bind('incromentor.onstepup', $.proxy( this.options['onStepUp'], this ));
+			this.$element.bind('incromentor.onstepdown', $.proxy( this.options['onStepDown'], this ));
+
+			this._buttons_state( parseInt(this.$element.val(),10) );
 		},
 
 		_keyboard_handle : function( event )
@@ -113,11 +135,13 @@
 			if( event.keyCode===38 )
 			{
 				this.$element.trigger( 'incromentor.stepup' );
+				this.$element.trigger( 'incromentor.change' );
 			}
 
 			if( event.keyCode===40 )
 			{
 				this.$element.trigger( 'incromentor.stepdown' );
+				this.$element.trigger( 'incromentor.change' );
 			}
 
 			if( this.options.keyboard_input===false )
@@ -133,6 +157,8 @@
 		},
 
 		_step_up : function(event){
+
+			event.preventDefault();
 
 			var current_val	= parseInt( this.$element.val(), 10 );
 			current_val = isNaN(current_val)? this.options.min:current_val;
@@ -157,6 +183,8 @@
 		},
 
 		_step_down : function(event){
+
+			event.preventDefault();
 
 			var current_val	= parseInt( this.$element.val(), 10 );
 
@@ -195,12 +223,12 @@
 
 
 	$.fn.incromentor = function( options ){
-		
+
 		return this.each( function(){
-			
+
 			var $this = $(this),
 				data = $this.data('incromentor');
-			
+
 			if( !data )
 			{
 				data = new Incromentor( $this, options );

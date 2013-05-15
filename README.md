@@ -9,15 +9,14 @@ Also adds an improvement allowing you to use a callback for every increment/decr
 
 Requeriments
 ------------
-incromentor requires Modenrizr in order to detect if browser supports the input number element.
+incromentor requires jQuery >= 1.6.3
 
 
 Usage
 -----
-Include in your site the jquery and Modernizr scripts prior to incromentor:
+Include in your site the jquery script prior to incromentor:
 
 	<script type="text/javascript" src="jquery-1.6.3.min.js"></script>
-	<script type="text/javascript" src="modernizr.js"></script>
 	<script type="text/javascript" src="incromentor.js"></script>
 
 Include also the stylesheet to customize the appearance of controls:
@@ -73,7 +72,7 @@ You can configure a function for increment/decrement events:
 
 Styling
 -------
-Incromentor adds the class `incromentor-wr` to every touched element. You can use included `incromentor.css` or create your own one.
+Incromentor adds the class `incromentor-wr` to every touched element. You can use include `incromentor.css` or create your own one.
 However you can tell incromentor to set a different class name:
 
 	$('#the_input').incromentor({
