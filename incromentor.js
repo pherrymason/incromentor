@@ -2,11 +2,19 @@
 	Plugin to add controls to increment/decrement the numeric value
 	of an input text.
 */
-(function( $ ) {
+(function(factory){
+	if( typeof exports==='object' )
+	{
+		factory( require('jquery') );
+	}
+	else
+	{
+		factory( root.jQuery );
+	}
+}( function( $ ){
 
-	var inputNumberAvailableSupported = checkInputTypeNumber();
-
-	var Incromentor = function( $elm, options ){
+	var inputNumberAvailableSupported = checkInputTypeNumber(),
+	Incromentor = function( $elm, options ){
 
 		this.$element	= $elm;
 		this.options	= $.extend( {}, $.fn.incromentor.defaults, options );
@@ -253,4 +261,4 @@
 		onStepDown		: function(){}				// function to execute after stepping down
 	};
 
-})( jQuery );
+}));
