@@ -9,7 +9,7 @@
 	}
 	else
 	{
-		factory( root.jQuery );
+		factory( jQuery );
 	}
 }( function( $ ){
 
