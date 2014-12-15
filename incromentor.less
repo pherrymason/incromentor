@@ -1,0 +1,51 @@
+// Drop shadows
+.box-shadow(@shadow) {
+  -webkit-box-shadow: @shadow;
+     -moz-box-shadow: @shadow;
+          box-shadow: @shadow;
+}
+
+
+.ui-spinner{
+	background	: #FFF;
+	display		: inline-block;
+	float		: none;
+	margin-right: 5px;
+	position	: relative;
+
+	input{
+		width : 35px;
+		padding-right : 25px;
+		text-align : center;
+	}
+
+	.ui-spinner-btn{
+		position: absolute;
+		right	: 0;
+		left	: auto;
+		.box-shadow(~"0 -1px 0 rgba(0,0,0,0.1) inset,1px 0 0 rgba(0,0,0,0.07) inset");
+		width   : 20px;
+		height	: 50%;
+		cursor	: pointer;
+		background-color : rgba(0,0,0,.07);
+
+		font-size  : 8px;
+		text-align : center;
+		line-height: 1.9;
+		color	   : #000 !important;
+
+		&.ui-spinner-up{
+			top : 0;
+		}
+
+		&.ui-spinner-down{
+			bottom : 0;
+		}
+
+		&:hover,
+		&:focus{
+			text-decoration : none;
+			background-color : rgba(0,0,0,.15);
+		}
+	}
+}

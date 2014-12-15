@@ -78,8 +78,8 @@
 
 
 			var $wrapper = $('<span class="'+this.options['class']+'"/>');
-			this.$btn_up = $( '<a href="#up" class="incromentor-up">' + this.options.more_text + '</a>' );
-			this.$btn_down	= $( '<a href="#down" class="incromentor-down">' + this.options.less_text + '</a>' );
+			this.$btn_up = $( '<a href="#up" class="'+this.options['class']+'-btn '+this.options['class']+'-up" tabindex="-1">' + this.options.more_text + '</a>' );
+			this.$btn_down	= $( '<a href="#down" class="'+this.options['class']+'-btn '+this.options['class']+'-down" tabindex="-1">' + this.options.less_text + '</a>' );
 
 			this.$element.css({'margin':0});
 			this.$element.wrap( $wrapper );
@@ -247,7 +247,7 @@
 
 
 	$.fn.incromentor.defaults = {
-		"class"			: "incromentor-wr",
+		"class"			: "ui-spinner",
 		more_text		: '&#9650',
 		less_text		: '&#9660',
 		step			: 1,
