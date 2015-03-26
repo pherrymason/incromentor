@@ -77,7 +77,7 @@
 			}
 
 
-			var $wrapper = $('<span class="'+this.options['class']+'"/>');
+			var $wrapper = $('<span class="'+this.options.classWrap+'"/>');
 			this.$btn_up = $( '<a href="#up" class="'+this.options['class']+'-btn '+this.options['class']+'-up" tabindex="-1">' + this.options.more_text + '</a>' );
 			this.$btn_down	= $( '<a href="#down" class="'+this.options['class']+'-btn '+this.options['class']+'-down" tabindex="-1">' + this.options.less_text + '</a>' );
 
@@ -131,8 +131,8 @@
 			this.$element.bind('incromentor.stepup', $.proxy( this._step_up, this ) );
 			this.$element.bind('incromentor.stepdown', $.proxy( this._step_down, this ) );
 
-			this.$element.bind('incromentor.onstepup', $.proxy( this.options['onStepUp'], this ));
-			this.$element.bind('incromentor.onstepdown', $.proxy( this.options['onStepDown'], this ));
+			this.$element.bind('incromentor.onstepup', $.proxy( this.options.onStepUp, this ));
+			this.$element.bind('incromentor.onstepdown', $.proxy( this.options.onStepDown, this ));
 
 			this._buttons_state( parseInt(this.$element.val(),10) );
 		},
@@ -247,7 +247,8 @@
 
 
 	$.fn.incromentor.defaults = {
-		"class"			: "ui-spinner",
+		classWrap		: "ui-spinner",
+        'class'         : 'ui-spinner',
 		more_text		: '&#9650',
 		less_text		: '&#9660',
 		step			: 1,
